@@ -12,10 +12,11 @@ pipeline {
 		stage('Docker Build') {
 			steps {
 			    powershell(script: '''
-			        cd MyOnlineShop
+			        cd MyOnlineShop/MyOnlineShop
 			        docker-compose build
 			        docker images -a
 			        cd..
+					cd..
 			    ''')
         	}
         }
