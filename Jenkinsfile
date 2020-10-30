@@ -11,6 +11,9 @@ pipeline {
         }
 		stage('Docker Build') {
 			steps {
+			    powershell(script: 'cd ./MyOnlineShop')
+        	}
+			steps {
 			    powershell(script: '''
 			        docker-compose build
 			        docker images -a
