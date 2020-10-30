@@ -3,8 +3,10 @@ pipeline {
     stages {
         stage('Display Current Directory') {
 			steps {
-			    def currentDir = powershell(returnStdout: true, script: 'Get-Location')
-			    println currentDir
+			    script {
+			        def currentDir = powershell(returnStdout: true, script: 'Get-Location')
+			        println currentDir
+			    }
         	}
         }
 		stage('Docker Build') {
