@@ -1,16 +1,21 @@
 pipeline {
     agent any    
     stages {
-        stage('Verify Branch') {
-            steps {
-                echo "$GIT_BRANCH"
-            }   
+        stage('Display Current Directory') {
+			steps {
+			    def currentDir = powershell(returnStdout: true, script: 'Get-Location')
+			    println currentDir
+        	}
         }
 		stage('Docker Build') {
 			steps {
-				powershell(script: '../docker-compose build')
-				powershell(script: '../docker images -a')
-			}
-		}
+			    powershell(script: '''
+			        cd MyOnlineShop
+			        docker-compose build
+			        docker images -a
+			        cd..
+			    ''')
+        	}
+        }
     }
 }
