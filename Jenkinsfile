@@ -9,10 +9,12 @@ pipeline {
 			    }
         	}
         }
-		stage('Docker Build') {
+		stage('Enter MyOnlineShop Directory') {
 			steps {
 			    powershell(script: 'cd ./MyOnlineShop')
         	}
+        }
+		stage('Docker Build') {
 			steps {
 			    powershell(script: '''
 			        docker-compose build
