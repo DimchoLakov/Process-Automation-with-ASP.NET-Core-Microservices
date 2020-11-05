@@ -25,7 +25,7 @@ Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-co
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyOnlineShop.Watchdog", "MyOnlineShop.Watchdog\MyOnlineShop.Watchdog.csproj", "{A983CE2E-BBB8-42DF-ABA2-B167A46573FC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyOnlineShop.Catalog.Tests", "..\MyOnlineShop.Catalog.Tests\MyOnlineShop.Catalog.Tests.csproj", "{2552A1EC-192D-49ED-AD01-AD1BF76033DC}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyOnlineShop.Catalog.Tests", "MyOnlineShop.Catalog.Tests\MyOnlineShop.Catalog.Tests.csproj", "{2552A1EC-192D-49ED-AD01-AD1BF76033DC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
