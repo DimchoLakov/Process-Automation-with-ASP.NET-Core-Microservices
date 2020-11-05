@@ -47,7 +47,7 @@ pipeline {
 				steps {
 					script {
 						docker.withRegistry('https://index.docker.io/v1/', 'DockerHub') {
-						def image = docker.image("ivaylokenov/carrentalsystem-identity-service")
+						def image = docker.image("dockerlakov/myonlineshop_catalog")
 						image.push("1.0.${env.BUILD_ID}")
 						image.push('latest')
 						}
