@@ -33,6 +33,7 @@ services:
 
     identity:
         container_name: identity
+        image: dockerlakov/myonlineshop-identity
         build:
             context: ./
             dockerfile: ./MyOnlineShop.Identity/Dockerfile
@@ -54,6 +55,7 @@ services:
         build:
             context: ./
             dockerfile: ./MyOnlineShop.Catalog/Dockerfile
+        image: dockerlakov/myonlineshop-catalog
         ports: 
             - "5007:80"
         env_file: ./MyOnlineShop.Common/Common.env
@@ -72,6 +74,7 @@ services:
         build:
             context: ./
             dockerfile: ./MyOnlineShop.Statistics/Dockerfile
+        image: dockerlakov/myonlineshop-statistics
         ports: 
             - "5015:80"
         env_file: ./MyOnlineShop.Common/Common.env
@@ -90,6 +93,7 @@ services:
         build:
             context: ./
             dockerfile: ./MyOnlineShop.Ordering/Dockerfile
+        image: dockerlakov/myonlineshop-ordering
         ports: 
             - "5005:80"
         env_file: ./MyOnlineShop.Common/Common.env
@@ -108,6 +112,7 @@ services:
         build:
             context: ./
             dockerfile: ./MyOnlineShop.ShoppingCart/Dockerfile
+        image: dockerlakov/myonlineshop-shoppingcart
         ports: 
             - "5009:80"
         env_file: ./MyOnlineShop.Common/Common.env
@@ -126,6 +131,7 @@ services:
         build:
             context: ./
             dockerfile: ./MyOnlineShop.ShoppingCart.Gateway/Dockerfile
+        image: dockerlakov/myonlineshop-shoppingcartgateway
         ports: 
             - "5011:80"
         env_file: ./MyOnlineShop.Common/Common.env
@@ -140,6 +146,7 @@ services:
         build:
             context: ./
             dockerfile: ./MyOnlineShop.WebMVC/Dockerfile
+        image: dockerlakov/myonlineshop-webmvc
         ports: 
             - "5019:80"
         env_file: ./MyOnlineShop.Common/Common.env
@@ -154,6 +161,7 @@ services:
         build:
             context: ./
             dockerfile: ./MyOnlineShop.WebMVC.Admin/Dockerfile
+        image: dockerlakov/myonlineshop-webmvcadmin
         ports: 
             - "5021:80"
         env_file: ./MyOnlineShop.Common/Common.env
@@ -168,6 +176,7 @@ services:
         build:
             context: ./
             dockerfile: ./MyOnlineShop.Watchdog/Dockerfile
+        image: dockerlakov/myonlineshop-watchdog
         ports: 
             - "5025:80"
         env_file: ./MyOnlineShop.Common/Common.env
