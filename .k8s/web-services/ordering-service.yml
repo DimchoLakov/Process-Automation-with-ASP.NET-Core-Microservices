@@ -1,0 +1,72 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: ordering-service-data
+spec:
+  accessModes:
+  - ReadWriteOnce
+  - ReadOnlyMany 
+  resources:
+    requests:
+      storage: 10Mi
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: ordering-service
+spec:
+  type: LoadBalancer
+  ports:
+  - port: 5005
+    targetPort: 80
+  selector:
+    web-service: ordering
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ordering-service
+spec:
+  selector:
+    matchLabels:
+      web-service: ordering
+  template:
+    metadata:
+      labels:
+        web-service: ordering
+        system: server
+    spec:
+      affinity:
+        podAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchLabels:
+                web-service: ordering
+            topologyKey: "kubernetes.io/hostname"
+      containers:
+      - name: ordering-service
+        image: dockerlakov/myonlineshop-ordering:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 80
+        resources:
+          limits:
+            memory: "512Mi"
+            cpu: "500m"
+        env:
+        - name: ConnectionStrings__DefaultConnection
+          valueFrom:
+            secretKeyRef:
+              name: environment-secrets
+              key: ordering-service-connection-string
+        volumeMounts:
+        - name: ordering-service-data
+          mountPath: /root/.aspnet/DataProtection-Keys
+      volumes:
+      - name: ordering-service-data
+        persistentVolumeClaim:
+          claimName: ordering-service-data

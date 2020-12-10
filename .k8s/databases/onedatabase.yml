@@ -1,0 +1,71 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: onedatabase-data
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Gi
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: onedatabase
+spec:
+  clusterIP: None
+  ports:
+  - port: 1433
+    targetPort: 1433
+  selector:
+    database: onedb
+
+---
+
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: onedatabase
+spec:
+  serviceName: onedatabase
+  selector:
+    matchLabels: 
+      database: onedb
+  template:
+    metadata:
+      labels:
+        database: onedb
+        system: database
+    spec:
+      terminationGracePeriodSeconds: 60
+      securityContext:
+        fsGroup: 10001
+      containers:
+      - name: onedatabase
+        image: mcr.microsoft.com/mssql/server:2019-latest
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 1433
+        resources:
+          limits:
+            memory: "2Gi"
+            cpu: "1000m"
+        env:
+        - name: ACCEPT_EULA
+          value: "Y"
+        - name: SA_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: environment-secrets
+              key: onedatabase-password
+        volumeMounts:
+        - name: onedatabase-data
+          mountPath: /var/opt/mssql
+      volumes:
+      - name: onedatabase-data
+        persistentVolumeClaim:
+          claimName: onedatabase-data
+    

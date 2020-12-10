@@ -1,0 +1,72 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: catalog-service-data
+spec:
+  accessModes:
+  - ReadWriteOnce
+  - ReadOnlyMany 
+  resources:
+    requests:
+      storage: 10Mi
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: catalog-service
+spec:
+  type: LoadBalancer
+  ports:
+  - port: 5007
+    targetPort: 80
+  selector:
+    web-service: catalog
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: catalog-service
+spec:
+  selector:
+    matchLabels:
+      web-service: catalog
+  template:
+    metadata:
+      labels:
+        web-service: catalog
+        system: server
+    spec:
+      affinity:
+        podAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchLabels:
+                web-service: catalog
+            topologyKey: "kubernetes.io/hostname"
+      containers:
+      - name: catalog-service
+        image: dockerlakov/myonlineshop-catalog:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 80
+        resources:
+          limits:
+            memory: "512Mi"
+            cpu: "500m"
+        env:
+        - name: ConnectionStrings__DefaultConnection
+          valueFrom:
+            secretKeyRef:
+              name: environment-secrets
+              key: catalog-service-connection-string
+        volumeMounts:
+        - name: catalog-service-data
+          mountPath: /root/.aspnet/DataProtection-Keys
+      volumes:
+      - name: catalog-service-data
+        persistentVolumeClaim:
+          claimName: catalog-service-data

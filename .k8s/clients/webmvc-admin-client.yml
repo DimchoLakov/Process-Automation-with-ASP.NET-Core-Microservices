@@ -1,0 +1,79 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: webmvcadmin-client-data
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Mi
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: webmvcadmin-client
+spec:
+  type: LoadBalancer
+  ports:
+  - port: 5021
+    targetPort: 80
+  selector:
+    web-client: webmvcadmin-client
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: webmvcadmin-client
+spec:
+  selector:
+    matchLabels:
+      web-client: webmvcadmin-client
+  template:
+    metadata:
+      labels:
+        web-client: webmvcadmin-client
+        system: client
+    spec:
+      containers:
+      - name: webmvcadmin-client
+        image: dockerlakov/myonlineshop-webmvcadmin:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 80
+        resources:
+          limits:
+            memory: "512Mi"
+            cpu: "250m"
+        env:
+        - name: ApplicationSettings__Secret
+          valueFrom:
+            secretKeyRef:
+              name: environment-secrets
+              key: security-token-secret
+        - name: ServiceEndpoints__Identity
+          valueFrom:
+            configMapKeyRef:
+              name: environment-settings
+              key: identity-endpoint
+        - name: ServiceEndpoints__Catalog
+          valueFrom:
+            configMapKeyRef:
+              name: environment-settings
+              key: catalog-endpoint
+        - name: ServiceEndpoints__Statistics
+          valueFrom:
+            configMapKeyRef:
+              name: environment-settings
+              key: statistics-endpoint
+        volumeMounts:
+        - name: webmvcadmin-client-data
+          mountPath: /root/.aspnet/DataProtection-Keys
+      volumes:
+      - name: webmvcadmin-client-data
+        persistentVolumeClaim:
+          claimName: webmvcadmin-client-data

@@ -1,0 +1,87 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: shoppingcartgateway-service-data
+spec:
+  accessModes:
+  - ReadWriteOnce
+  - ReadOnlyMany 
+  resources:
+    requests:
+      storage: 10Mi
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: shoppingcartgateway-service
+spec:
+  type: LoadBalancer
+  ports:
+  - port: 5011
+    targetPort: 80
+  selector:
+    web-service: shoppingcartgateway
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: shoppingcartgateway-service
+spec:
+  selector:
+    matchLabels:
+      web-service: shoppingcartgateway
+  template:
+    metadata:
+      labels:
+        web-service: shoppingcartgateway
+        system: server
+    spec:
+      affinity:
+        podAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchLabels:
+                web-service: shoppingcartgateway
+            topologyKey: "kubernetes.io/hostname"
+      containers:
+      - name: shoppingcartgateway-service
+        image: dockerlakov/myonlineshop-shoppingcartgateway:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 80
+        resources:
+          limits:
+            memory: "512Mi"
+            cpu: "500m"
+        env:
+        - name: ApplicationSettings__Secret
+          valueFrom:
+            secretKeyRef:
+              name: environment-secrets
+              key: security-token-secret
+        - name: ServiceEndpoints__Ordering
+          valueFrom:
+            configMapKeyRef:
+              name: environment-settings
+              key: ordering-endpoint
+        - name: ServiceEndpoints__Catalog
+          valueFrom:
+            configMapKeyRef:
+              name: environment-settings
+              key: catalog-endpoint
+        - name: ServiceEndpoints__ShoppingCart
+          valueFrom:
+            configMapKeyRef:
+              name: environment-settings
+              key: shoppingcart-endpoint
+        volumeMounts:
+        - name: shoppingcartgateway-service-data
+          mountPath: /root/.aspnet/DataProtection-Keys
+      volumes:
+      - name: shoppingcartgateway-service-data
+        persistentVolumeClaim:
+          claimName: shoppingcartgateway-service-data

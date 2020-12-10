@@ -1,0 +1,89 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: webmvc-client-data
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Mi
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: webmvc-client
+spec:
+  type: LoadBalancer
+  ports:
+  - port: 5019
+    targetPort: 80
+  selector:
+    web-client: webmvc-client
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: webmvc-client
+spec:
+  selector:
+    matchLabels:
+      web-client: webmvc-client
+  template:
+    metadata:
+      labels:
+        web-client: webmvc-client
+        system: client
+    spec:
+      containers:
+      - name: webmvc-client
+        image: dockerlakov/myonlineshop-webmvc:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 80
+        resources:
+          limits:
+            memory: "512Mi"
+            cpu: "250m"
+        env:
+        - name: ApplicationSettings__Secret
+          valueFrom:
+            secretKeyRef:
+              name: environment-secrets
+              key: security-token-secret
+        - name: ServiceEndpoints__Identity
+          valueFrom:
+            configMapKeyRef:
+              name: environment-settings
+              key: identity-endpoint
+        - name: ServiceEndpoints__Ordering
+          valueFrom:
+            configMapKeyRef:
+              name: environment-settings
+              key: ordering-endpoint
+        - name: ServiceEndpoints__Catalog
+          valueFrom:
+            configMapKeyRef:
+              name: environment-settings
+              key: catalog-endpoint
+        - name: ServiceEndpoints__ShoppingCart
+          valueFrom:
+            configMapKeyRef:
+              name: environment-settings
+              key: shoppingcart-endpoint
+        - name: ServiceEndpoints__ShoppingCartGateway
+          valueFrom:
+            configMapKeyRef:
+              name: environment-settings
+              key: shoppingcartgateway-endpoint
+        volumeMounts:
+        - name: webmvc-client-data
+          mountPath: /root/.aspnet/DataProtection-Keys
+      volumes:
+      - name: webmvc-client-data
+        persistentVolumeClaim:
+          claimName: webmvc-client-data

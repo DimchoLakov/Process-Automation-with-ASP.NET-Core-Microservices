@@ -1,0 +1,35 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: environment-settings
+data:
+  event-bus-user: rabbitmq
+  identity-endpoint: http://identity-service:5003
+  ordering-endpoint: http://ordering-service:5005
+  catalog-endpoint: http://catalog-service:5007
+  shoppingcart-endpoint: http://shoppingcart-service:5009
+  shoppingcartgateway-endpoint: http://shoppingcartgateway-service:5011
+  statistics-endpoint: http://statistics-service:5015
+  watchdog-catalog-health: http://catalog-service:5007/health
+  watchdog-identity-health: http://identity-service:5003/health
+  watchdog-statistics-health: http://statistics-service:5015/health
+  watchdog-ordering-health: http://ordering-service:5005/health
+  watchdog-shoppingcart-health: http://shoppingcart-service:5009/health
+
+---
+
+apiVersion: v1
+kind: Secret
+metadata:
+  name: environment-secrets
+data:
+  onedatabase-password: b25lRGF0YWJhc2VQYXNzd29yZDEyLg==
+  security-token-secret: U3VwZXIgVWx0cmEgTWVnYSBUb3AgU2VjcmV0IFNlY3JldA==
+  admin-password: YWRtaW5wYXNzMTIh
+  identity-service-connection-string: U2VydmVyPW9uZWRhdGFiYXNlO0RhdGFiYXNlPU15T25saW5lU2hvcElkZW50aXR5O1VzZXIgSWQ9c2E7IFBhc3N3b3JkPW9uZURhdGFiYXNlUGFzc3dvcmQxMi47TXVsdGlwbGVBY3RpdmVSZXN1bHRTZXRzPXRydWU=
+  catalog-service-connection-string: U2VydmVyPW9uZWRhdGFiYXNlO0RhdGFiYXNlPU15T25saW5lU2hvcENhdGFsb2c7VXNlciBJZD1zYTsgUGFzc3dvcmQ9b25lRGF0YWJhc2VQYXNzd29yZDEyLjtNdWx0aXBsZUFjdGl2ZVJlc3VsdFNldHM9dHJ1ZQ==
+  statistics-service-connection-string: U2VydmVyPW9uZWRhdGFiYXNlO0RhdGFiYXNlPU15T25saW5lU2hvcFN0YXRpc3RpY3M7VXNlciBJZD1zYTsgUGFzc3dvcmQ9b25lRGF0YWJhc2VQYXNzd29yZDEyLjtNdWx0aXBsZUFjdGl2ZVJlc3VsdFNldHM9dHJ1ZQ==
+  ordering-service-connection-string: U2VydmVyPW9uZWRhdGFiYXNlO0RhdGFiYXNlPU15T25saW5lU2hvcE9yZGVyaW5nO1VzZXIgSWQ9c2E7IFBhc3N3b3JkPW9uZURhdGFiYXNlUGFzc3dvcmQxMi47TXVsdGlwbGVBY3RpdmVSZXN1bHRTZXRzPXRydWU=
+  shoppingcart-service-connection-string: U2VydmVyPW9uZWRhdGFiYXNlO0RhdGFiYXNlPU15T25saW5lU2hvcFNob3BwaW5nQ2FydDtVc2VyIElkPXNhOyBQYXNzd29yZD1vbmVEYXRhYmFzZVBhc3N3b3JkMTIuO011bHRpcGxlQWN0aXZlUmVzdWx0U2V0cz10cnVl
+  event-bus-password: cmFiYml0bXE=
+  event-bus-erlang-cookie: UmFuZDBtUjRiYml0TXFDbzBrMWU=
