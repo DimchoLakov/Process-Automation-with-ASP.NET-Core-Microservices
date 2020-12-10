@@ -50,14 +50,19 @@ spec:
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 5672
-          name: first-event-bus-port
+          name: first-bus-port
         - containerPort: 15672
-          name: second-event-bus-port
+          name: second-bus-port
         resources:
           limits:
             memory: "1Gi"
             cpu: "500m"
         env:
+        - name: host
+          valueFrom:
+            configMapKeyRef:
+              name: environment-settings
+              key: event-bus-host
         - name: RABBITMQ_DEFAULT_USER
           valueFrom:
             configMapKeyRef:

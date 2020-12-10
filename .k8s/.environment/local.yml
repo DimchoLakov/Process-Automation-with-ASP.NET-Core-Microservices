@@ -3,6 +3,7 @@ kind: ConfigMap
 metadata:
   name: environment-settings
 data:
+  event-bus-host: rabbitmq
   event-bus-user: rabbitmq
   identity-endpoint: http://identity-service:5003
   ordering-endpoint: http://ordering-service:5005
