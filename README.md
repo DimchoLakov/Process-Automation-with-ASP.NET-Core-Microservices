@@ -6,3 +6,12 @@ CI / CD\
 Cloud infrastructure\
 Clustering\
 Automation of common tasks
+
+# FAO Kenov
+
+Login for user and admin clients
+username: admin@mos.com, password: adminpass12
+
+User client - doesn't have an IP at the moment as google api throws an error --> Error 403: QUOTA_EXCEEDED - Quota 'IN_USE_ADDRESSES' exceeded.
+Admin client - http://35.238.185.222:5021/
+Watchdog - http://35.225.25.60:5025/healthchecks-ui#/healthchecks/
