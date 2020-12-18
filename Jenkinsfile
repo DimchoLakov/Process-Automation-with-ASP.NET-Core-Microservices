@@ -87,5 +87,17 @@ pipeline {
 					}
 				}
 		}
+		stage('Deploy Development') {
+      when { branch 'main' }
+      steps {
+        withKubeConfig([credentialsId: 'DevelopmentServer', serverUrl: 'https://35.184.83.74']) {
+		       		powershell(script: 'kubectl apply -f ./.k8s/.environment/development.yml') 
+		       		powershell(script: 'kubectl apply -f ./.k8s/databases') 
+		       		powershell(script: 'kubectl apply -f ./.k8s/event-bus') 
+		       		powershell(script: 'kubectl apply -f ./.k8s/web-services') 
+          	   		powershell(script: 'kubectl apply -f ./.k8s/clients') 
+        		}
+      		}
+    	}
     }
 }
