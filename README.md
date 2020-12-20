@@ -12,6 +12,7 @@ Automation of common tasks
 Login for user and admin clients
 username: admin@mos.com, password: adminpass12
 
-User client - doesn't have an IP at the moment as google api throws an error --> Error 403: QUOTA_EXCEEDED - Quota 'IN_USE_ADDRESSES' exceeded.
-Admin client - http://35.238.185.222:5021/
-Watchdog - http://35.225.25.60:5025/healthchecks-ui#/healthchecks/
+User client - doesn't have an IP at the moment as google api throws an error --> Error 403: QUOTA_EXCEEDED - Quota 'IN_USE_ADDRESSES' exceeded. 
+-Google does not let me increase the quota.-
+Admin client - http://34.123.100.166:5021/
+Watchdog - http://34.70.116.208:5025/healthchecks-ui#/healthchecks/
